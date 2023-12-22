@@ -2,7 +2,7 @@
 
 This satellite tracker follows the movement of a specific list of satellites in a custom web interface. The TLE data is collected via APIs provided by [TLE API](https://tle.ivanstanojevic.me/) and transformed into geolocation coordinates (longitude/latitude). These are used to mark the satellites on a 2D earth map. Additional information are provided for each satellite, such as velocity (when the satellite's marker is hovered) and trajectory.
 
-## Libraries used in this project:
+## Libraries used in this project
 
 - `leaflet`       - used for map creation and manipulation
 - `tle.js`        - used for satellites' TLE conversion and trajectory calculation
