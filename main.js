@@ -134,92 +134,92 @@ let marker;
 let trajectory;
 
 async function getSatByName(satName) {
-trajectoryColor = randomHexColor();
-currentSat = satName;
-prevSat=currentSat;
+    trajectoryColor = randomHexColor();
+    currentSat = satName;
+    prevSat = currentSat;
 
-while (currentSat === prevSat) {
-await updateSatelliteData();
-await new Promise(r => setTimeout(r, 2000));
-}
+    while (currentSat === prevSat) {
+        await updateSatelliteData();
+        await new Promise(r => setTimeout(r, 2000));
+    }
 }
 
 async function updateSatelliteData() {
-const url = "https://tle.ivanstanojevic.me/api/tle/";
-const response = await fetch(url);
-const json = await response.json();
+    const url = "https://tle.ivanstanojevic.me/api/tle/";
+    const response = await fetch(url);
+    const json = await response.json();
 
-const satIdToFind = findSatelliteIdByName(json, currentSat);
-await getTleData(satIdToFind, currentSat);
+    const satIdToFind = findSatelliteIdByName(json, currentSat);
+    await getTleData(satIdToFind, currentSat);
 }
 
 async function getTleData(satId, currentSat) {
-if (prevSat !== currentSat) {
-removeMarkerAndTrajectory();
-prevSat = currentSat;
-}
+    if (prevSat !== currentSat) {
+        removeMarkerAndTrajectory();
+        prevSat = currentSat;
+    }
 
-const url = "https://tle.ivanstanojevic.me/api/tle/" + satId;
-const response = await fetch(url);
-const json = await response.json();
+    const url = "https://tle.ivanstanojevic.me/api/tle/" + satId;
+    const response = await fetch(url);
+    const json = await response.json();
 
-const satLine1 = json.line1;
-const satLine2 = json.line2;
+    const satLine1 = json.line1;
+    const satLine2 = json.line2;
 
-if (!satLine1 || !satLine2) {
-console.error("Invalid satellite data for", json.name);
-return;
-}
+    if (!satLine1 || !satLine2) {
+        console.error("Invalid satellite data for", json.name);
+        return;
+    }
 
-const satInfo = tlejs.getSatelliteInfo(satLine1 + '\n' + satLine2, null, observerLat, observerLng);
+    const satInfo = tlejs.getSatelliteInfo(satLine1 + '\n' + satLine2, null, observerLat, observerLng);
 
-if (!satInfo || satInfo === null) {
-console.error("Invalid satellite info for", json.name);
-return;
-}
+    if (!satInfo || satInfo === null) {
+        console.error("Invalid satellite info for", json.name);
+        return;
+    }
 
-if (displayTrajectory && prevSat === currentSat) {
-// Display the trajectory if toggle switch is active
-trajectory = await getSatelliteTrajectory(json.name + "\n" + satLine1 + "\n" + satLine2, trajectoryColor);
-} else if (trajectory) {
-trajectory.remove();
-}
+    if (displayTrajectory && prevSat === currentSat) {
+        // Display the trajectory if toggle switch is active
+        trajectory = await getSatelliteTrajectory(json.name + "\n" + satLine1 + "\n" + satLine2, trajectoryColor);
+    } else if (trajectory) {
+        trajectory.remove();
+    }
 
-const satCoordinates = L.latLng(satInfo.lat, satInfo.lng);
+    const satCoordinates = L.latLng(satInfo.lat, satInfo.lng);
 
-const satVelocity = satInfo.velocity.toFixed(3);
+    const satVelocity = satInfo.velocity.toFixed(3);
 
-if (!marker || prevSat !== currentSat) {
-if (marker) {
-marker.remove();
-}
+    if (!marker || prevSat !== currentSat) {
+        if (marker) {
+            marker.remove();
+        }
 
-marker = L.marker(satCoordinates, { icon: satIcon,title:satVelocity+ " km/s" })
-.bindTooltip(json.name , { permanent: true, direction: 'top' })
-.addTo(map);
-} else {
-marker.setLatLng(satCoordinates);
-marker.getTooltip().setContent(json.name);
-}
+        marker = L.marker(satCoordinates, { icon: satIcon, title: satVelocity + " km/s" })
+            .bindTooltip(json.name, { permanent: true, direction: 'top' })
+            .addTo(map);
+    } else {
+        marker.setLatLng(satCoordinates);
+        marker.getTooltip().setContent(json.name);
+    }
 
 }
 
 function findSatelliteIdByName(json, satName) {
-for (const satTle of json.member) {
-if (satTle.name === satName) {
-    return satTle.satelliteId;
-}
-}
-return null;
+    for (const satTle of json.member) {
+        if (satTle.name === satName) {
+            return satTle.satelliteId;
+        }
+    }
+    return null;
 }
 
 function removeMarkerAndTrajectory() {
-if (marker) {
-marker.remove();
-}
-if (trajectory) {
-trajectory.remove();
-}
+    if (marker) {
+        marker.remove();
+    }
+    if (trajectory) {
+        trajectory.remove();
+    }
 }
 
 
