@@ -4,8 +4,8 @@ This satellite tracker follows the movement of a specific list of satellites in 
 
 ## Libraries used in this project
 
-- `leaflet`       - used for map creation and manipulation
-- `tle.js`        - used for satellites' TLE conversion and trajectory calculation
+- [leaflet](https://github.com/Leaflet/Leaflet)         - used for map creation and manipulation
+- [tle.js](https://github.com/davidcalhoun/tle.js)        - used for satellites' TLE conversion and trajectory calculation
 
 ## Installation
 
