@@ -11,7 +11,7 @@ This satellite tracker follows the movement of a specific list of satellites in 
 
 1. Clone the repository
 ```bash
-git clone https://https://github.com/Kryptoenix/satellite-tracker.git
+git clone https://github.com/Kryptoenix/satellite-tracker.git
 cd satellite-tracker
 ```
 2. Run the server using Python3
